@@ -61,4 +61,4 @@ app.get(basePath + '/confirm', (req, res) => {
 
 const server = http.createServer(app);
 
-server.listen(port, () => console.log("Penis"));
+server.listen(port, () => console.log("Server started"));
