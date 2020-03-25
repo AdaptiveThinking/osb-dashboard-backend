@@ -18,8 +18,7 @@ const client = {
 const token = {
     grant_type: "authorization_code",
     response_type: "id_token token",
-    scope: "openid",
-    redirectURI: "http://localhost:4000"
+    scope: "openid"
 }
 
 const basePath = 'http://localhost:4000'
@@ -43,6 +42,8 @@ app.get('/authentication/:instanceId', (req, res) => {
 
 app.get('/authentication/:instanceId/confirm', (req, res) => {
 
+    const redirectUri = `${basePath}/authentication/${req.params.instanceId}/confirm`
+
     const requestBody = {
         client_id: client.clientId,
         client_secret: client.clientSecret,
@@ -51,13 +52,13 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
         scope: token.scope,
         code: req.query.code,
         state: req.query.session_state,
-        redirect_uri: token.redirectURI
+        redirect_uri: redirectUri
     }
 
     axios.post(`${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/token`, qs.stringify(requestBody), { headers: { 'content-type': 'application/x-www-form-urlencoded' } }).
         then((result) => {
             console.log(result);
-        })
+        })     
 })
 
 const server = http.createServer(app);
