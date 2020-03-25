@@ -2,8 +2,18 @@
 Put content of angular2 build into 'public' folder.
 */
 
-const port = 4000;
 const axios = require('axios');
+const TemplateEngine = require('thymeleaf');
+const authentication = require('./authentication.service.js')
+let templateEngine = new TemplateEngine.TemplateEngine();
+
+
+
+
+const port = 4000;
+
+const customEndpoints = [{ url: 'https://osb-log-metric-dashboard-backend-test.system.cf.hob.local', identifier: 'log-metric-backend' }];
+
 const redirect = {
     responseType: "code"
 }
@@ -30,9 +40,13 @@ const express = require('express');
 const qs = require('querystring');
 var app = express();
 
+
 app.use(express.static(__dirname + "/public/monitoring"));
 
-app.get('/*', (req, res) => res.sendFile(path.join(__dirname)));
+app.get('/*', (req, res) => {
+
+    res.sendFile(path.join(__dirname))
+});
 
 app.get('/authentication/:instanceId', (req, res) => {
 
@@ -57,8 +71,10 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
 
     axios.post(`${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/token`, qs.stringify(requestBody), { headers: { 'content-type': 'application/x-www-form-urlencoded' } }).
         then((result) => {
-            console.log(result);
-        })     
+            templateEngine.processFile(`${__dirname}/index.html`, { serviceInstanceId: req.params.instanceId, endpointUrl: "", customEndpoints, toke: result.data.access_token }).then(result => {
+                res.send(result);
+            })
+        })
 })
 
 const server = http.createServer(app);
