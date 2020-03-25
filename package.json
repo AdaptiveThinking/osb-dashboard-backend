@@ -1,7 +1,6 @@
 {
   "name": "prodlikeserver",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,8 +8,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "express": "^4.17.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evoila/osb-dashboard-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/evoila/osb-dashboard-backend/issues"
+  },
+  "homepage": "https://github.com/evoila/osb-dashboard-backend#readme",
+  "description": ""
 }

@@ -5,14 +5,14 @@ Put content of angular2 build into 'public' folder.
 const port = 4000;
 const axios = require('axios');
 const redirect = {
-    responseType: "code",
-    keycloak: "http://localhost:8080"
+    responseType: "code"
 }
 
 const client = {
     clientSecret: "1228c255-ba0c-447c-8656-39306b8b6d06",
     clientId: "demo-client",
-    realm: "Demo"
+    realm: "Demo",
+    keycloak: "http://localhost:8080"
 }
 
 const token = {
@@ -23,11 +23,12 @@ const token = {
 }
 
 const basePath = 'http://localhost:4000'
-const redirectUrl = `${keycloak}/auth/realms/${client.realm}/protocol/openid-connect/auth?client_id=${client.clientId}&client_secret=${client.clientSecret}&response_type=${redirect.responseType}`
+const redirectUrl = `${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/auth?client_id=${client.clientId}&client_secret=${client.clientSecret}&response_type=${redirect.responseType}`
 
 const http = require('http');
 const path = require('path')
 const express = require('express');
+const qs = require('querystring');
 var app = express();
 
 app.use(express.static(__dirname + "/public/monitoring"));
@@ -36,13 +37,12 @@ app.get('/*', (req, res) => res.sendFile(path.join(__dirname)));
 
 app.get('/authentication/:instanceId', (req, res) => {
 
-    const redirect = redirectUrl + `&redirect_uri=${basePath}/${req.params.instanceId}/confirm`
+    const redirect = redirectUrl + `&redirect_uri=${basePath}/authentication/${req.params.instanceId}/confirm`
     res.redirect(redirect)
 });
 
-app.get(basePath + '/confirm', (req, res) => {
+app.get('/authentication/:instanceId/confirm', (req, res) => {
 
-    const sessionState = req.query.code;
     const requestBody = {
         client_id: client.clientId,
         client_secret: client.clientSecret,
@@ -53,7 +53,8 @@ app.get(basePath + '/confirm', (req, res) => {
         state: req.query.session_state,
         redirect_uri: token.redirectURI
     }
-    axios.post(`${redirect.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/token`, qs.stringify(requestBody), { headers: { 'content-type': 'application/x-www-form-urlencoded' } }).
+
+    axios.post(`${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/token`, qs.stringify(requestBody), { headers: { 'content-type': 'application/x-www-form-urlencoded' } }).
         then((result) => {
             console.log(result);
         })
@@ -61,4 +62,4 @@ app.get(basePath + '/confirm', (req, res) => {
 
 const server = http.createServer(app);
 
-server.listen(port, () => console.log("Server started"));
+server.listen(port, () => console.log("Dashboard Webserver started..."));
