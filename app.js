@@ -1,8 +1,5 @@
 const axios = require('axios');
-const TemplateEngine = require('thymeleaf');
-const expressThymeleaf = require('express-thymeleaf')
 const authentication = require('./authentication.service.js')
-let templateEngine = new TemplateEngine.TemplateEngine(TemplateEngine.STANDARD_CONFIGURATION);
 
 const port = 4000;
 
@@ -22,7 +19,8 @@ const client = {
 const token = {
     grant_type: "authorization_code",
     response_type: "id_token token",
-    scope: "openid"
+    scope: "openid",
+    prefix: "Bearer "
 }
 
 const basePath = 'http://localhost:4000'
@@ -33,8 +31,23 @@ const path = require('path')
 const express = require('express');
 const qs = require('querystring');
 var app = express();
-app.engine('html', expressThymeleaf(templateEngine));
-app.set('view engine', 'html');
+var fs = require('fs')
+app.engine('html', function (filePath, options, callback) {
+  fs.readFile(filePath, function (err, content) {
+    if (err) return callback(err)
+    var rendered = content.toString()
+      .replace(' th:inline="javascript"', "")
+      .replace('th:href="${baseHref}"', 'href=' + options.baseHref)
+      .replace('[[${ serviceInstanceId }]]', '\"' + options.serviceInstanceId + '\"')
+      .replace('[[${ token }]]', '\"' + options.token + '\"')
+      .replace('[[${ endpointUrl }]]', '\"' + options.endpointUrl+ '\"' )
+      .replace('[[${ customEndpoints }]]', options.customEndpoints)
+
+    return callback(null, rendered)
+  })
+})
+app.set('views', __dirname + "/public/monitoring")
+app.set('view engine', 'html')
 
 app.use(express.static(__dirname + "/public/monitoring"));
 
@@ -66,7 +79,7 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
 
     axios.post(`${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/token`, qs.stringify(requestBody), { headers: { 'content-type': 'application/x-www-form-urlencoded' } }).
         then((result) => {
-            res.render(`${__dirname}/public/monitoring/index.html`, { baseHref: `/authentication/${req.params.instanceId}`, serviceInstanceId: req.params.instanceId, endpointUrl: "", customEndpoints, token: result.data.access_token})
+            res.render(`index.html`, { baseHref: `/authentication/${req.params.instanceId}`, serviceInstanceId: req.params.instanceId, endpointUrl: "", customEndpoints: JSON.stringify(customEndpoints), token: token.prefix + result.data.access_token})
         })
 })
 
