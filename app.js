@@ -66,7 +66,7 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
 
     axios.post(`${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/token`, qs.stringify(requestBody), { headers: { 'content-type': 'application/x-www-form-urlencoded' } }).
         then((result) => {
-            res.render(`${__dirname}/public/monitoring/index.html`, { baseHref: `/authentication/${req.params.instanceId}`, serviceInstanceId: req.params.instanceId, endpointUrl: "", customEndpoints, toke: result.data.access_token})
+            res.render(`${__dirname}/public/monitoring/index.html`, { baseHref: `/authentication/${req.params.instanceId}`, serviceInstanceId: req.params.instanceId, endpointUrl: "", customEndpoints, token: result.data.access_token})
         })
 })
 
