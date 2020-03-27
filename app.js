@@ -1,14 +1,20 @@
+// Webserver Configuration
 const port = 4000;
 const basePath = 'http://localhost:4000';
 
+// Identity Provider Configuration
 const {CLIENT} = require('./config')
 const {TOKEN} = require('./config')
 const {REDIRECT} = require('./config')
 const {CUSTOM_ENDPOINTS} = require('./config')
 
+// Custom Imports
+const configService = require('./config.service');
+const authentication = require('./authentication.service.js');
+
+//
 const redirectUrl = `${CLIENT.keycloak}/auth/realms/${CLIENT.realm}/protocol/openid-connect/auth?client_id=${CLIENT.clientId}&client_secret=${CLIENT.clientSecret}&response_type=${REDIRECT.responseType}`;
 
-const authentication = require('./authentication.service.js');
 const http = require('http');
 const path = require('path');
 const express = require('express');
@@ -18,11 +24,10 @@ var app = express();
 app.engine('html', require('./templating').TemplateEngine);
 app.set('views', __dirname + "/public/monitoring");
 app.set('view engine', 'html');
-
 app.use(express.static(__dirname + "/public/monitoring"));
 
-const configService = require('./config.service');
 
+// Endpoint Conofiguration
 app.get('/keycloak/cert', (req, res) => {
     
     console.log(configService.getCert)
@@ -61,6 +66,7 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
         })
 })
 
+// Run Server
 const server = http.createServer(app);
 
 server.listen(port, () => console.log("Dashboard Webserver started..."));
