@@ -15,7 +15,7 @@ const CLIENT = {
     clientSecret: "1228c255-ba0c-447c-8656-39306b8b6d06",
     clientId: "demo-client",
     realm: "Demo",
-    keycloak: "http://localhost:8080"
+    keycloak: "http://localhost:8080",
 }
 
 const TOKEN = {

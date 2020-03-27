@@ -3,14 +3,15 @@ const port = 4000;
 const basePath = 'http://localhost:4000';
 
 // Identity Provider Configuration
-const {CLIENT} = require('./config')
-const {TOKEN} = require('./config')
-const {REDIRECT} = require('./config')
-const {CUSTOM_ENDPOINTS} = require('./config')
+const { CLIENT } = require('./config')
+const { TOKEN } = require('./config')
+const { REDIRECT } = require('./config')
+const { CUSTOM_ENDPOINTS } = require('./config')
+const { ENDPOINT_URL } = require('./config')
 
 // Custom Imports
 const configService = require('./config.service');
-const authentication = require('./authentication.service.js');
+const authenticationService = require('./authentication.service');
 
 //
 const redirectUrl = `${CLIENT.keycloak}/auth/realms/${CLIENT.realm}/protocol/openid-connect/auth?client_id=${CLIENT.clientId}&client_secret=${CLIENT.clientSecret}&response_type=${REDIRECT.responseType}`;
@@ -28,12 +29,6 @@ app.use(express.static(__dirname + "/public/monitoring"));
 
 
 // Endpoint Conofiguration
-app.get('/keycloak/cert', (req, res) => {
-    
-    console.log(configService.getCert)
-    res.send(configService.getCert)
-});
-
 app.get('/*', (req, res) => {
 
     res.sendFile(path.join(__dirname))
@@ -62,7 +57,9 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
 
     axios.post(`${CLIENT.keycloak}/auth/realms/${CLIENT.realm}/protocol/openid-connect/token`, qs.stringify(requestBody), { headers: { 'content-type': 'application/x-www-form-urlencoded' } }).
         then((result) => {
-            res.render(`index.html`, { baseHref: `/authentication/${req.params.instanceId}`, serviceInstanceId: req.params.instanceId, endpointUrl: ENDPOINT_URL, customEndpoints: JSON.stringify(CUSTOM_ENDPOINTS), token: TOKEN.prefix + result.data.access_token})
+            if (authenticationService.verifyToken(result.data.access_token)) {
+                res.render(`index.html`, { baseHref: `/authentication/${req.params.instanceId}`, serviceInstanceId: req.params.instanceId, endpointUrl: ENDPOINT_URL, customEndpoints: JSON.stringify(CUSTOM_ENDPOINTS), token: TOKEN.prefix + result.data.access_token })
+            }
         })
 })
 
