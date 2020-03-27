@@ -1,6 +1,7 @@
 var fs = require('fs')
 
-export const templateEngine = function (filePath, options, callback) {
+module.exports = {
+    templateEngine: function(filePath, options, callback) {
     fs.readFile(filePath, function (err, content) {
       if (err) return callback(err)
       var rendered = content.toString()
@@ -14,3 +15,4 @@ export const templateEngine = function (filePath, options, callback) {
       return callback(null, rendered)
     })
   }
+}
