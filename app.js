@@ -1,9 +1,12 @@
-const axios = require('axios');
-const authentication = require('./authentication.service.js')
-
 const port = 4000;
+const basePath = 'http://localhost:4000';
 
-const customEndpoints = [{ url: 'https://osb-log-metric-dashboard-backend-test.system.cf.hob.local', identifier: 'log-metric-backend' }];
+const customEndpoints = [
+    { 
+        url: 'https://osb-log-metric-dashboard-backend-test.system.cf.hob.local', 
+        identifier: 'log-metric-backend' 
+    }
+];
 
 const redirect = {
     responseType: "code"
@@ -23,31 +26,20 @@ const token = {
     prefix: "Bearer "
 }
 
-const basePath = 'http://localhost:4000'
-const redirectUrl = `${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/auth?client_id=${client.clientId}&client_secret=${client.clientSecret}&response_type=${redirect.responseType}`
+
+const redirectUrl = `${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/auth?client_id=${client.clientId}&client_secret=${client.clientSecret}&response_type=${redirect.responseType}`;
+
+const authentication = require('./authentication.service.js');
 
 const http = require('http');
-const path = require('path')
+const path = require('path');
 const express = require('express');
 const qs = require('querystring');
+const axios = require('axios');
 var app = express();
-var fs = require('fs')
-app.engine('html', function (filePath, options, callback) {
-  fs.readFile(filePath, function (err, content) {
-    if (err) return callback(err)
-    var rendered = content.toString()
-      .replace(' th:inline="javascript"', "")
-      .replace('th:href="${baseHref}"', 'href=' + options.baseHref)
-      .replace('[[${ serviceInstanceId }]]', '\"' + options.serviceInstanceId + '\"')
-      .replace('[[${ token }]]', '\"' + options.token + '\"')
-      .replace('[[${ endpointUrl }]]', '\"' + options.endpointUrl+ '\"' )
-      .replace('[[${ customEndpoints }]]', options.customEndpoints)
-
-    return callback(null, rendered)
-  })
-})
-app.set('views', __dirname + "/public/monitoring")
-app.set('view engine', 'html')
+app.engine('html', require('./templating').templateEngine);
+app.set('views', __dirname + "/public/monitoring");
+app.set('view engine', 'html');
 
 app.use(express.static(__dirname + "/public/monitoring"));
 
@@ -64,7 +56,7 @@ app.get('/authentication/:instanceId', (req, res) => {
 
 app.get('/authentication/:instanceId/confirm', (req, res) => {
 
-    const redirectUri = `${basePath}/authentication/${req.params.instanceId}/confirm`
+    const redirectUri = `${basePath}/authentication/${req.params.instanceId}/confirm`;
 
     const requestBody = {
         client_id: client.clientId,
