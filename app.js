@@ -26,7 +26,6 @@ const token = {
     prefix: "Bearer "
 }
 
-
 const redirectUrl = `${client.keycloak}/auth/realms/${client.realm}/protocol/openid-connect/auth?client_id=${client.clientId}&client_secret=${client.clientSecret}&response_type=${redirect.responseType}`;
 
 const authentication = require('./authentication.service.js');
@@ -37,7 +36,7 @@ const express = require('express');
 const qs = require('querystring');
 const axios = require('axios');
 var app = express();
-app.engine('html', require('./templating').templateEngine);
+app.engine('html', require('./templating').TemplateEngine);
 app.set('views', __dirname + "/public/monitoring");
 app.set('view engine', 'html');
 
