@@ -1,9 +1,14 @@
-/* const axios = require('axios');
-var app = require('./app.js');
+const axios = require('axios');
+const {CLIENT} = require('./config');
 
-const certEndpoint = `${app.client.keycloak}/auth/realms/${app.client.realm}/protocol/openid-connect/certs`
+const certEndpoint = `${CLIENT.keycloak}/auth/realms/${CLIENT.realm}/protocol/openid-connect/certs`
 
-axios.get(certEndpoint)
-    .then((result) => {
-        const publicKey = result.keys[0].x5c[0]
-    }) */
+module.exports = {
+    keycloakCert: function () {
+        axios.get(certEndpoint)
+            .then((result) => {
+                const publicKey = result.keys[0].x5c[0]
+                return publicKey;
+            })
+    }
+}

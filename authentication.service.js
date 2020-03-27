@@ -3,7 +3,7 @@ var config = require('./config.service.js');
 
 module.exports = {
     checkToken: function (token) {
-        jwt.verify(token, config.keycloakPK, { ignoreExpiration: false });
+        jwt.verify(token, config.keycloakCert, { ignoreExpiration: false });
         return true;
     }
 }
