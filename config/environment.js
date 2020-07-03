@@ -7,13 +7,13 @@ const develop = {
         port: parseInt(process.env.PORT) || 4000
     },
     configserver: {
-        url: process.env.CFG_SERVER || 'http://localhost:8888',
-        name: process.env.CFG_SERVER_APPLICATION || 'osb-evoila-test',
+        url: process.env.CFG_SERVER,
+        name: process.env.CFG_SERVER_APPLICATION,
         auth: {
             user: process.env.CFG_SERVER_USERNAME,
             pass: process.env.CFG_SERVER_PASSWORD
         },
-        profiles: 'log-metric-dashboard'
+        profiles: process.env.ACTIVE_PROFILES
     }
 };
 
@@ -23,13 +23,13 @@ const test = {
         port: 4000
     },
     configserver: {
-        url: process.env.CFG_SERVER || 'http://localhost:8888',
-        name: process.env.CFG_SERVER_APPLICATION || 'osb-evoila-test',
+        url: process.env.CFG_SERVER,
+        name: process.env.CFG_SERVER_APPLICATION,
         auth: {
             user: process.env.CFG_SERVER_USERNAME,
             pass: process.env.CFG_SERVER_PASSWORD
         },
-        profiles: 'log-metric-dashboard-backend-keycloak'
+        profiles: 'log-metric-dashboard'
     }
 };
 

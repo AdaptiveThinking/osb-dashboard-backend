@@ -1,4 +1,4 @@
-const ENVIRONMENT = require("../config/environment");
+const environment = require("../config/environment");
 const configService = require("../services/config.service")();
 const qs = require('querystring');
 const axios = require('axios');
@@ -10,27 +10,26 @@ const REDIRECT = {
 
 const TOKEN = {
     grant_type: "authorization_code",
-    response_type: "id_token token",
+    response_type: "token",
     prefix: "Bearer "
 }
 
-configService.then((config) => {
+configService.then((cfg) => {
 
-    //config.forEach((key, value) => console.log(key + ":" + value));
+    //cfg.forEach((key, value) => console.log(key + ":" + value));
 
     //IdentityProvider
-    if ((config.get("identity-provider.authType") == "kc")) {
-        config = {
-            host: config.get("identity-provider.host"),
-            realm: config.get("identity-provider.realm"),
-            clientId: config.get("identity-provider.clientId"),
-            clientSecret: config.get("identity-provider.clientSecret"),
-            scopes: config.get("identity-provider.scopes"),
-            apiEndpoint: config.get("identity-provider.apiEndpoint"),
-            endpointUrl: "http://localhost:8081"
-        }
+    config = {
+        host: cfg.get("identity-provider.host"),
+        realm: cfg.get("identity-provider.realm"),
+        clientId: cfg.get("identity-provider.clientId"),
+        clientSecret: cfg.get("identity-provider.clientSecret"),
+        apiEndpoint: cfg.get("identity-provider.apiEndpoint"),
+        scopes: cfg.get("identity-provider.scopes"),
+        endpointUrl: "http://localhost:8081"
     }
 
+    //console.log(config)
 
 })
     .catch(error => {
@@ -42,7 +41,7 @@ exports.getAccessToken = function (requestBody) {
 }
 
 exports.buildRedirectUri = function (instanceId) {
-    return `${ENVIRONMENT.webserver.hostname}:${ENVIRONMENT.webserver.port}/authentication/${instanceId}/confirm`;
+    return `${environment.webserver.hostname}:${environment.webserver.port}/authentication/${instanceId}/confirm`;
 }
 
 exports.buildAuthenticationUri = function (redirectUri) {
@@ -51,11 +50,11 @@ exports.buildAuthenticationUri = function (redirectUri) {
 
 exports.buildRequestBody = function (authCode, sessionsState, redirectUri) {
     return requestBody = {
-        client_id: ENVIRONMENT.identiyProvider.clientId,
-        client_secret: ENVIRONMENT.identiyProvider.clientSecret,
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
         grant_type: TOKEN.grant_type,
         response_type: TOKEN.response_type,
-        scope: ENVIRONMENT.identiyProvider.scopes,
+        scope: config.scopes,
         code: authCode,
         state: sessionsState,
         redirect_uri: redirectUri

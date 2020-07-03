@@ -30,9 +30,9 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
     const redirectUri = authenticationService.buildRedirectUri(req.params.instanceId);
     const requestBody = authenticationService.buildRequestBody(req.query.code, req.query.session_state, redirectUri);
     const serviceInstanceId = req.params.instanceId;
-    authenticationService.getAccessToken().
+    authenticationService.getAccessToken(requestBody).
         then((result) => {
-            res.render(`index.html`, { baseHref: `/authentication/${serviceInstanceId}`, serviceInstanceId: serviceInstanceId, endpointUrl: environment.endpointUrl, token: 'Bearer ' + result.data.access_token })
+            res.render(`index.html`, { baseHref: `/authentication/${serviceInstanceId}`, serviceInstanceId: serviceInstanceId, endpointUrl: "http://localhost:8081", token: 'Bearer ' + result.data.access_token })
         });
 }
 
