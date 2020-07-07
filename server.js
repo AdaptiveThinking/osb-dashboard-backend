@@ -32,7 +32,9 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
     const serviceInstanceId = req.params.instanceId;
     authenticationService.getAccessToken(requestBody).
         then((result) => {
-            res.render(`index.html`, { baseHref: `/authentication/${serviceInstanceId}`, serviceInstanceId: serviceInstanceId, endpointUrl: "https://osb-log-metric-dashboard-backend-keycloak-test.system.cf.hob.local", token: 'Bearer ' + result.data.access_token })
+            res.render(`index.html`, {
+                baseHref: `/authentication/${serviceInstanceId}`, serviceInstanceId: serviceInstanceId, token: 'Bearer ' + result.data.access_token
+            })
         });
 }
 
