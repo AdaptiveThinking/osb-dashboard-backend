@@ -14,7 +14,7 @@ var app = express();
 app.engine('html', require('./templating').TemplateEngine);
 app.set('views', __dirname + "/public/monitoring");
 app.set('view engine', 'html');
-app.use(express.static(__dirname + "/public/monitoring"));
+app.use('/app', express.static(__dirname + "/public/monitoring"));
 
 // Endpoint Configuration
 app.get('/*', (req, res) => {
