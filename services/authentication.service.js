@@ -26,7 +26,7 @@ configService.then((cfg) => {
         clientSecret: cfg.get("identity-provider.clientSecret"),
         apiEndpoint: cfg.get("identity-provider.apiEndpoint"),
         scopes: cfg.get("identity-provider.scopes"),
-        endpointUrl: "http://localhost:8081"
+        endpointUrl: cfg.get("endpointUrl")
     }
 
     //console.log(config)
