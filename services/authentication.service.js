@@ -41,7 +41,9 @@ exports.getAccessToken = function (requestBody) {
 }
 
 exports.buildRedirectUri = function (instanceId) {
-    return `${environment.webserver.hostname}:${environment.webserver.port}/authentication/${instanceId}/confirm`;
+    console.log('Hostname: ' + environment.webserver.hostname);
+    console.log('Port: ' + environment.webserver.port);
+    return `${environment.webserver.hostname}:${environment.webserver.externalPort}/authentication/${instanceId}/confirm`;
 }
 
 exports.buildAuthenticationUri = function (redirectUri) {

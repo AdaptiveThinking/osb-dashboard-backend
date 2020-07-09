@@ -1,10 +1,10 @@
 const env = process.env.NODE_ENV // 'develop' or 'test'
-var os = require("os");
 
 const develop = {
     webserver: {
-        hostname: process.env.HOSTNAME || os.hostname(),
-        port: parseInt(process.env.PORT) || 4000
+        hostname: process.env.HOSTNAME,
+        port: parseInt(process.env.PORT) || 4000,
+        externalPort: ''
     },
     configserver: {
         url: process.env.CFG_SERVER,
@@ -13,14 +13,15 @@ const develop = {
             user: process.env.CFG_SERVER_USERNAME,
             pass: process.env.CFG_SERVER_PASSWORD
         },
-        profiles: process.env.ACTIVE_PROFILES
+        profiles: process.env.CFG_SERVER_ACTIVE_PROFILES
     }
 };
 
 const test = {
     webserver: {
         hostname: 'http://localhost',
-        port: 4000
+        port: 4000,
+        externalPort: this.port
     },
     configserver: {
         url: process.env.CFG_SERVER,
@@ -29,7 +30,7 @@ const test = {
             user: process.env.CFG_SERVER_USERNAME,
             pass: process.env.CFG_SERVER_PASSWORD
         },
-        profiles: 'log-metric-dashboard'
+        profiles: process.env.CFG_SERVER_ACTIVE_PROFILES
     }
 };
 

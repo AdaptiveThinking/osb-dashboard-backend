@@ -22,12 +22,16 @@ app.get('/*', (req, res) => {
 });
 
 app.get('/authentication/:instanceId', (req, res) => {
+    console.log('GET /authentication/' + req.params.instanceId);
     const redirectUri = authenticationService.buildRedirectUri(req.params.instanceId);
+    console.log('redirecting to: ' + redirectUri)
     res.redirect(authenticationService.buildAuthenticationUri(redirectUri));
 });
 
 app.get('/authentication/:instanceId/confirm', (req, res) => {
+    console.log('GET /authentication/' + req.params.instanceId + 'confirm');
     const redirectUri = authenticationService.buildRedirectUri(req.params.instanceId);
+    console.log('redirecting to: ' + redirectUri)
     const requestBody = authenticationService.buildRequestBody(req.query.code, req.query.session_state, redirectUri);
     const serviceInstanceId = req.params.instanceId;
     authenticationService.getAccessToken(requestBody).
