@@ -29,6 +29,9 @@ configService.then((cfg) => {
         endpointUrl: cfg.get("endpointUrl")
     }
 
+    console.log('Fetched config from ' + environment.configserver.url)
+    console.log('Profiles: ' + environment.configserver.profiles)
+
     //console.log(config)
 
 })
@@ -41,8 +44,6 @@ exports.getAccessToken = function (requestBody) {
 }
 
 exports.buildRedirectUri = function (instanceId) {
-    console.log('Hostname: ' + environment.webserver.hostname);
-    console.log('Port: ' + environment.webserver.port);
     return `${environment.webserver.hostname}:${environment.webserver.externalPort}/authentication/${instanceId}/confirm`;
 }
 

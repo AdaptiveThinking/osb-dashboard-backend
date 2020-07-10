@@ -21,7 +21,7 @@ const test = {
     webserver: {
         hostname: 'http://localhost',
         port: 4000,
-        externalPort: this.port
+        externalPort: this.port || 4000
     },
     configserver: {
         url: process.env.CFG_SERVER,

@@ -33,9 +33,11 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
     const redirectUri = authenticationService.buildRedirectUri(req.params.instanceId);
     console.log('redirecting to: ' + redirectUri)
     const requestBody = authenticationService.buildRequestBody(req.query.code, req.query.session_state, redirectUri);
+    console.log(requestBody)
     const serviceInstanceId = req.params.instanceId;
     authenticationService.getAccessToken(requestBody).
         then((result) => {
+            console.log('Authentication successfull')
             res.render(`index.html`, {
                 baseHref: `/authentication/${serviceInstanceId}`, serviceInstanceId: serviceInstanceId, token: 'Bearer ' + result.data.access_token
             })
@@ -47,3 +49,4 @@ app.get('/authentication/:instanceId/confirm', (req, res) => {
 // Start Webserver
 const server = http.createServer(app);
 server.listen(environment.webserver.port, () => console.log(`Dashboard Webserver is running...`));
+console.log(environment);
