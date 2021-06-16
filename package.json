@@ -1,17 +1,18 @@
 {
-  "name": "prodlikeserver",
+  "name": "log_metric_dashboard_docker",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "main": "server.js",
+  "author": "Lars Atzinger <latzinger@evoila.de>",
   "dependencies": {
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
+    "cloud-config-client": "^1.5.2",
     "compression": "^1.7.4",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-thymeleaf": "^0.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "nodecloud-config-client": "^0.1.1",
+    "thymeleaf": "^0.18.1"
   },
   "devDependencies": {},
   "repository": {
@@ -22,5 +23,5 @@
     "url": "https://github.com/evoila/osb-dashboard-backend/issues"
   },
   "homepage": "https://github.com/evoila/osb-dashboard-backend#readme",
-  "description": ""
+  "description": "LogMetric Dashboard on Docker"
 }
