@@ -25,8 +25,7 @@ configService.then((cfg) => {
         clientId: cfg.get("identity-provider.clientId"),
         clientSecret: cfg.get("identity-provider.clientSecret"),
         apiEndpoint: cfg.get("identity-provider.apiEndpoint"),
-        scopes: cfg.get("identity-provider.scopes"),
-        endpointUrl: cfg.get("endpointUrl")
+        scopes: cfg.get("identity-provider.scopes")
     }
 
     console.log('Fetched config from ' + environment.configserver.url)
